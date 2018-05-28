@@ -28,40 +28,44 @@
 				</div>
 			</div>
 		</center>
-		<div id='bigBook' v-show='stateBook'>
-			<span>ТИПО МОДАЛЬНОЕ ОКНО КЛИК ВНЕ НЕГО УБЕРЕТ ЕГО</span><br>
-			<img class='BookImage' v-bind:src='img(nowBook.img)'>
-			<span class='title'>{{nowBook.title}}</span>
-			<br>
-			<span class='autor'>{{nowBook.author}}</span>
-			<br>
-			<span class='desc'>{{nowBook.desc}}</span>
-			<br>
-			<span>COST: {{nowBook.cost}}</span>
-			<br>
-			<button v-on:click='add(nowBook)'>+</button>
-			<div v-show='checkInList(nowBook)!==null'>
-				<span>{{countOf(nowBook)}}</span>
-				<button v-on:click.stop='del(nowBook)'>-</button>
+		<dialog id='bookBG'>
+			<div id='bigBook'>
+				<span>ТИПО МОДАЛЬНОЕ ОКНО КЛИК ВНЕ НЕГО УБЕРЕТ ЕГО</span><br>
+				<img class='BookImage' v-bind:src='img(nowBook.img)'>
+				<span class='title'>{{nowBook.title}}</span>
+				<br>
+				<span class='autor'>{{nowBook.author}}</span>
+				<br>
+				<span class='desc'>{{nowBook.desc}}</span>
+				<br>
+				<span>COST: {{nowBook.cost}}</span>
+				<br>
+				<button v-on:click='add(nowBook)'>+</button>
+				<div v-show='checkInList(nowBook)!==null'>
+					<span>{{countOf(nowBook)}}</span>
+					<button v-on:click.stop='del(nowBook)'>-</button>
+				</div>
 			</div>
-		</div>
-		<form id='shopList' v-on:submit.prevent='sendOrder' v-show='stateList'>
-			<span>ТИПО МОДАЛЬНОЕ ОКНО КЛИК ВНЕ НЕГО УБЕРЕТ ЕГО</span><br>
-			<span>SHOPLIST</span>
-			<div v-for='item in shopList'>
-				<span>id: {{item.id}}</span>
-				<span>name: {{item.name}}</span>
-				<span>Cost: {{item.cost}}</span>
-				<span>Count: {{item.count}}</span>
-				<button type='button' v-on:click='add(item)'>+</button>
-				<button type='button' v-on:click='del(item)'>-</button>
-			</div>
-			<span>SUM: {{sumOfShop}}</span>
-			<br>
-			<input id='holder' type='text' placeholder="holder" required>
-			<button type='submit'>ORDER</button>
-			<button type='button' v-on:click='clear'>CLEAR</button>
-		</form>
+		</dialog>
+		<dialog id='listBG'>
+			<form id='shopList' v-on:submit.prevent='sendOrder'>
+				<span>ТИПО МОДАЛЬНОЕ ОКНО КЛИК ВНЕ НЕГО УБЕРЕТ ЕГО</span><br>
+				<span>SHOPLIST</span>
+				<div v-for='item in shopList'>
+					<span>id: {{item.id}}</span>
+					<span>name: {{item.name}}</span>
+					<span>Cost: {{item.cost}}</span>
+					<span>Count: {{item.count}}</span>
+					<button type='button' v-on:click='add(item)'>+</button>
+					<button type='button' v-on:click='del(item)'>-</button>
+				</div>
+				<span>SUM: {{sumOfShop}}</span>
+				<br>
+				<input id='holder' type='text' placeholder="holder" required>
+				<button type='submit'>ORDER</button>
+				<button type='button' v-on:click='clear'>CLEAR</button>
+			</form>
+		</dialog>
 	</div>
 	<script type="text/javascript" src='sys/main.js'></script>
 </body>

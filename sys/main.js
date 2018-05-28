@@ -99,14 +99,15 @@ function sumOfShop() {
 function showBook(book) {
 	vm.nowBook=book;
 	if(vm.nowBook.img.length===0) vm.nowBook.img='default.png';
-	vm.stateBook=true;
+	bookBG.showModal();
+	//vm.stateBook=true;
 	setTimeout(function(){
 		document.addEventListener('click',eventCloseBook,true);
 	},0);
 }
 
 function showList() {
-	vm.stateList=true;
+	listBG.showModal();
 	setTimeout(function(){
 		document.addEventListener('click',eventCloseList,true);
 	},0);
@@ -114,7 +115,8 @@ function showList() {
 
 function eventCloseList(e) {
 	if(!e.target.closest('#shopList')) {
-		vm.stateList=false;
+		listBG.close();
+		//vm.stateList=false;
 		document.removeEventListener('click',eventCloseList,true);
 		e.stopPropagation();
 	}
@@ -122,7 +124,8 @@ function eventCloseList(e) {
 
 function eventCloseBook(e) {
 	if(!e.target.closest('#bigBook')) {
-		vm.stateBook=false;
+		//vm.stateBook=false;
+		bookBG.close();
 		vm.nowBook={img: 'default.png'};
 		document.removeEventListener('click',eventCloseBook,true);
 		e.stopPropagation();
@@ -197,6 +200,9 @@ function sendOrder() {
 		alert('Список покупок пуст');
 	}
 }
+
+const listBG = document.getElementById('listBG');
+const bookBG = document.getElementById('bookBG');
 
 getBooks();
 
