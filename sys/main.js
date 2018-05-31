@@ -1,11 +1,9 @@
-const vm = new Vue({
+const vm = new Vue({//Создаем экземпляр vue для того чтобы можно было использовать переменные и функции через html
 	el: '#all',
 	data: {
-		books: [],
-		nowBook: {img: 'default.png'},
-		shopList: [],
-		stateBook: false,
-		stateList: false,
+		books: [],//массив с книгами
+		nowBook: {img: 'default.png'},//обьект содержащий текущую увеличенную книгу
+		shopList: [],//корзина
 	},
 	methods: {
 		littleDesc: littleDesc,
@@ -25,46 +23,47 @@ const vm = new Vue({
 });
 
 
-const descSize = 50
+const descSize = 50;//длина краткого описания, если длина описания больше то на витрине показывается не полное описание(в увеличенной версии книги все подробно)
 
-class shopItem {
-	constructor(book) {
-		this.id = book.id;
-		this.name = book.name;
-		this.cost = book.cost;
-		this.count=1;
+class shopItem {//класс для элементов корзины
+	constructor(book) {//в обьектах будут хранится лишь
+		this.id = book.id;// id элемента
+		this.name = book.name;//название книги(только чтобы в корзине было видно какая книга)
+		this.cost = book.cost;//цена книги
+		this.count=1;//количество таких товаров
 	}
-	delete() {
-		if(this.count==1) {
+	delete() {//удаление экземпляра книги
+		if(this.count==1) {//если удаляется последняя из одинаковых книг
 			var index = checkInList(this);
 			if(index!==null) {
 				vm.shopList.splice(index,1);
 			}
-		} else {
+		} else {//если несколько одинаковых книг
 			this.count--;
 		}
 	}
-	add() {
+	add() {//Добавить книгу к заказу
 		this.count++;
 	}
-	toJSON() {
-		return {
+	toJSON() {//то как будет переводится этот обьект в формат JSON
+		return {//JSON т.к. его удобно хранить в текстовом виде и легко им пользоваться
 			id: this.id,
 			count: this.count,
 		}
 	}
 }
 
-function clear() {
+function clear() {//очищение корзины
 	if(vm.shopList.length>0) {
-		vm.shopList.splice(0,vm.shopList.length);
+		vm.shopList.splice(0,vm.shopList.length);//удаляем все элементы массива
+		//vm.shopList=[] не подходит из-за ообенностей VueJS
 		alert('Корзина очищена');
 	} else {
 		alert('Корзина и так пуста');
 	}
 }
 
-function countOf(book) {
+function countOf(book) {//Функция получения количества книг в корзине
 	const index = checkInList(book);
 	if(index!==null) {
 		return vm.shopList[index].count;
@@ -73,7 +72,7 @@ function countOf(book) {
 	}
 }
 
-function checkInList(book) {
+function checkInList(book) {//Проверка находится ли книга в корзине
 	var index=null;;
 	try {
 		for(var i = 0;i<vm.shopList.length;i++) {
@@ -88,7 +87,7 @@ function checkInList(book) {
 	return index;
 }
 
-function sumOfShop() {
+function sumOfShop() {//Сумма на которую заказано книг
 	var sum = 0;
 	for(item of this.shopList) {
 		sum+=item.cost*item.count;
@@ -96,35 +95,32 @@ function sumOfShop() {
 	return sum;
 }
 
-function showBook(book) {
+function showBook(book) {//Открытие книги в окошке
 	vm.nowBook=book;
 	if(vm.nowBook.img.length===0) vm.nowBook.img='default.png';
 	bookBG.showModal();
-	//vm.stateBook=true;
 	setTimeout(function(){
 		document.addEventListener('click',eventCloseBook,true);
 	},0);
 }
 
-function showList() {
+function showList() {//Открытие корзины
 	listBG.showModal();
 	setTimeout(function(){
 		document.addEventListener('click',eventCloseList,true);
 	},0);
 }
 
-function eventCloseList(e) {
+function eventCloseList(e) {//событие для закрытия корзины
 	if(!e.target.closest('#shopList')) {
 		listBG.close();
-		//vm.stateList=false;
 		document.removeEventListener('click',eventCloseList,true);
 		e.stopPropagation();
 	}
 }
 
-function eventCloseBook(e) {
+function eventCloseBook(e) {//Событие для закрытия увеличенной книги
 	if(!e.target.closest('#bigBook')) {
-		//vm.stateBook=false;
 		bookBG.close();
 		vm.nowBook={img: 'default.png'};
 		document.removeEventListener('click',eventCloseBook,true);
@@ -132,23 +128,23 @@ function eventCloseBook(e) {
 	}
 }
 
-function addToShop(book) {
+function addToShop(book) {//Добавить книгу в корзину/увеличить кол-во книг если уже добавлено
 	var index=checkInList(book);
 	if(index!==null) {
-		vm.shopList[index].add();
+		vm.shopList[index].add();//если книга есть то увеличить их кол-во
 	} else {
-		vm.shopList.push(new shopItem(book));
+		vm.shopList.push(new shopItem(book));//если книги нет то добавить
 	}
 }
 
-function delFromShop(book) {
+function delFromShop(book) {//удалить один экземпляр книги из корзины
 	var index=checkInList(book);
 	if(index!==null) {
-		vm.shopList[index].delete();
+		vm.shopList[index].delete();//Если удаляется последняя одинаковая книга то удаление из корзины обьекта
 	}
 }
 
-function littleDesc(text) {
+function littleDesc(text) {//Функция которая обрезает описание книги если символов много
 	if(text.length<=descSize) {
 		return text;
 	} else {
@@ -156,53 +152,56 @@ function littleDesc(text) {
 	}
 }
 
-function getBooks() {
+function getBooks() {//Получение списка книг из бд
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST','sys/main.php',true);
 	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	xhr.onreadystatechange = function() {
-		if(xhr.readyState == 4&&xhr.status==200) {
-			try {
+		if(xhr.readyState == 4&&xhr.status==200) {//здесь обрабатывается уже завершенный запрос
+			try {//попытка преобразовать ответ в формате JSON
 				vm.books = JSON.parse(xhr.responseText);
-			} catch(err) {
+			} catch(err) {//в случае ошибки в консоль выведется код ответа и ошибка
 				console.log(xhr.responseText);
 				console.log(err);
 			}
 		}
 	}
-	xhr.send('action=getBooks');
+	xhr.send('action=getBooks');//отправка запроса
 }
 
-function sendOrder() {
-	if(vm.shopList.length>0) {
+function sendOrder() {//Отправка заказа
+	if(vm.shopList.length>0) {//Проверка если корзина не пуста
 		const holder = document.getElementById('holder').value;
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST','sys/main.php',true);
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.onreadystatechange = function() {
-			if(xhr.readyState == 4&&xhr.status==200) {
-				try {
+			if(xhr.readyState == 4&&xhr.status==200) {//здесь обрабатывается уже завершенный запрос
+				try {//Попытка пропарсить JSON
 					const resp = JSON.parse(xhr.responseText);
-					if(resp.status=='ok') {
-						alert(`Заказ успешно размещен\nНомер заказ ${resp.id}`);
-						vm.shopList.splice(0,vm.shopList.length);
+					if(resp.status=='ok') {//если код ответа "хороший"
+						alert(`Заказ успешно размещен\nНомер заказ ${resp.id}`);//вывод номера заказа
+						vm.shopList.splice(0,vm.shopList.length);//очищение корзины
 					} else {
-						alert(resp.msg);
+						alert(resp.msg);//если код ответа другой или его нет вывести alert с текстом ошбки
 					}
-				} catch(err) {
+				} catch(err) {//в случае ошибки в консоль выведется код ответа и ошибка
 					console.log(xhr.responseText);
 					console.log(err);
 				}
 			}
 		}
-		xhr.send('action=doOrder&objects='+JSON.stringify(vm.shopList)+'&holder='+holder);
-	} else {
+		xhr.send('action=doOrder&objects='+JSON.stringify(vm.shopList)+'&holder='+holder);//формирование запроса
+		//сначала указываем действие чтобы сервер понял чего мы хотим
+		//потом в формате JSON передаем обьекта содержащиеся в корзине
+		//в конце вписываем кто оставил заказ
+	} else {//если пуста вывести alert
 		alert('Список покупок пуст');
 	}
 }
 
-const listBG = document.getElementById('listBG');
-const bookBG = document.getElementById('bookBG');
+const listBG = document.getElementById('listBG');//Сокращаем длину кода получая HTML элемент и сразу записывая его в переменную
+const bookBG = document.getElementById('bookBG');//аналогично
 
-getBooks();
+getBooks();//после загрузки скрипта сразу получаем список книг
 
