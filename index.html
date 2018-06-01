@@ -21,10 +21,10 @@
 					<br>
 					<span class='littleDesc'>{{littleDesc(book.desc)}}</span><!--описание книги-->
 				</div>
-				<button v-on:click='add(book)'>+</button><!--кнопка добавления книги в корзину/увеличение кол-ва книг-->
+				<button v-on:click.stop='add(book)'>+</button><!--кнопка добавления книги в корзину/увеличение кол-ва книг-->
 				<div v-show='checkInList(book)!==null'><!--условие показа счетчика книг и кнопки удалить из корзины-->
 					<span>{{countOf(book)}}</span><!--количество этих книг в корзине-->
-					<button v-on:click='del(book)'>-</button><!--кнопка удаления из корзины-->
+					<button v-on:click.stop='del(book)'>-</button><!--кнопка удаления из корзины-->
 				</div>
 			</div>
 		</center>
