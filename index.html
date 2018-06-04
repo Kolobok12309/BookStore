@@ -3,68 +3,67 @@
 <head>
 	<meta charset="utf-8">
 	<title>BookStore</title>
-	<script type="text/javascript" src="sys/vue.js"></script><!--Подключаем удобный фреймворк для js-->
-	<link rel="stylesheet" type="text/css" href="sys/style.css"><!--подключаем стили-->
-</head>
+	<script type="text/javascript" src="sys/vue.js"></script>
+	<link rel="stylesheet" type="text/css" href="sys/style.css"></head>
 <body>
 	<div id='all'>
-		<span v-on:click='showList' id='buttonList'>LIST</span><!--вешаем действие на клик-->
+		<span v-on:click='showList' id='buttonList'>LIST</span>
 		<center id='Books'>
-			<div v-for='book in books' v-on:click='show(book)' class='book'><!--цикл для отображения книг-->
-				<img class='BookImage' v-bind:src='img(book.img)'><!--назначение картинки из свойства книги-->
+			<div v-for='book in books' v-on:click='show(book)' class='book'>
+				<img class='BookImage' v-bind:src='img(book.img)'>
 				<div class='inf'>
-					<span class='title'>{{book.name}}</span><!--пишем название книги из свойтсва обьекта-->
+					<span class='title'>{{book.name}}</span>
 					<br>
-					<span class='author'>Author: {{book.author}}</span><!--Пишем автора книг-->
+					<span class='author'>Author: {{book.author}}</span>
 					<br>
-					<span class='cost'>Cost: {{book.cost}}</span><!--отображение ценника-->
+					<span class='cost'>Cost: {{book.cost}}</span>
 					<br>
-					<span class='littleDesc'>{{littleDesc(book.desc)}}</span><!--описание книги-->
+					<span class='littleDesc'>{{littleDesc(book.desc)}}</span>
 				</div>
-				<button v-on:click.stop='add(book)'>+</button><!--кнопка добавления книги в корзину/увеличение кол-ва книг-->
-				<div v-show='checkInList(book)!==null'><!--условие показа счетчика книг и кнопки удалить из корзины-->
-					<span>{{countOf(book)}}</span><!--количество этих книг в корзине-->
-					<button v-on:click.stop='del(book)'>-</button><!--кнопка удаления из корзины-->
+				<button v-on:click.stop='add(book)'>+</button>
+				<div v-show='checkInList(book)!==null'>
+					<span>{{countOf(book)}}</span>
+					<button v-on:click.stop='del(book)'>-</button>
 				</div>
 			</div>
 		</center>
-		<dialog id='bookBG'><!--модальное окно увеличенной книги-->
+		<dialog id='bookBG'>
 			<div id='bigBook'>
-				<img class='BookImage' v-bind:src='img(nowBook.img)'><!--назначаем картинку из свойства текущей большой книги-->
-				<span class='title'>{{nowBook.title}}</span><!--название книги-->
+				<img class='BookImage' v-bind:src='img(nowBook.img)'>
+				<span class='title'>{{nowBook.title}}</span>
 				<br>
-				<span class='autor'>{{nowBook.author}}</span><!--автор-->
+				<span class='autor'>{{nowBook.author}}</span>
 				<br>
-				<span class='desc'>{{nowBook.desc}}</span><!--полное описание книги-->
+				<span class='desc'>{{nowBook.desc}}</span>
 				<br>
-				<span>COST: {{nowBook.cost}}</span><!--ценник книги-->
+				<span>COST: {{nowBook.cost}}</span>
 				<br>
-				<button v-on:click='add(nowBook)'>+</button><!--кнопка добавления в корзину-->
-				<div v-show='checkInList(nowBook)!==null'><!--условие показа счетчика книг и кнопки удалить из корзины-->
-					<span>{{countOf(nowBook)}}</span><!--количество этих книг в корзине-->
-					<button v-on:click='del(nowBook)'>-</button><!--кнопка удаления из корзины-->
+				<button v-on:click='add(nowBook)'>+</button>
+				<div v-show='checkInList(nowBook)!==null'>
+					<span>{{countOf(nowBook)}}</span>
+					<button v-on:click='del(nowBook)'>-</button>
 				</div>
 			</div>
 		</dialog>
-		<dialog id='listBG'><!--модальное окно корзины-->
-			<form id='shopList' v-on:submit.prevent='sendOrder'><!--создаем форму и переназначаем событие submit на свое действие-->
+		<dialog id='listBG'>
+			<form id='shopList' v-on:submit.prevent='sendOrder'>
 				<span>SHOPLIST</span>
-				<div v-for='item in shopList'><!--цикл для отображения списка в корзине-->
-					<span>id: {{item.id}}</span><!--id элемента корзины-->
-					<span>name: {{item.name}}</span><!--название элемента в корзине-->
-					<span>Cost: {{item.cost}}</span><!--цена элемента корзины-->
-					<span>Count: {{item.count}}</span><!--количество этих элементов-->
-					<button type='button' v-on:click='add(item)'>+</button><!--кнопка добавления в корзину-->
-					<button type='button' v-on:click='del(item)'>-</button><!--кнопка удаления из корзины-->
+				<div v-for='item in shopList'>
+					<span>id: {{item.id}}</span>
+					<span>name: {{item.name}}</span>
+					<span>Cost: {{item.cost}}</span>
+					<span>Count: {{item.count}}</span>
+					<button type='button' v-on:click='add(item)'>+</button>
+					<button type='button' v-on:click='del(item)'>-</button>
 				</div>
-				<span>SUM: {{sumOfShop}}</span><!--Общая сумма заказа-->
+				<span>SUM: {{sumOfShop}}</span>
 				<br>
-				<input id='holder' type='text' placeholder="holder" required><!--обязательное текстовое поле с именем получателя-->
-				<button type='submit'>ORDER</button><!--кнопка отправки формы-->
-				<button type='button' v-on:click='clear'>CLEAR</button><!--кнопка очищения корзины-->
+				<input id='holder' type='text' placeholder="holder" required>
+				<button type='submit'>ORDER</button>
+				<button type='button' v-on:click='clear'>CLEAR</button>
 			</form>
 		</dialog>
 	</div>
-	<script type="text/javascript" src='sys/main.js'></script><!--подключение главного js файла-->
+	<script type="text/javascript" src='sys/main.js'></script>
 </body>
 </html>
