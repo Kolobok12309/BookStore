@@ -1,0 +1,12 @@
+FROM php:7.0-fpm
+
+RUN apt-get update && apt-get install -y \
+curl \
+wget \
+sqlite3
+
+ADD php.ini /usr/local/etc/php/conf.d/40-custom.ini
+
+WORKDIR /var/www/test
+
+CMD ["php-fpm"]

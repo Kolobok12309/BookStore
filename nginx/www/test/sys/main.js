@@ -166,6 +166,7 @@ function getBooks() {
 		}
 	}
 	xhr.send('action=getBooks');
+	setTimeout(getBooks,30000);
 }
 
 function sendOrder() {
